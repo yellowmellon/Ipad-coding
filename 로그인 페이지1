@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인/회원가입 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e0e0e0;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #e0e0e0;
+            border-radius: 20px;
+            box-shadow: 10px 10px 30px #bebebe, -10px -10px 30px #ffffff;
+            width: 350px;
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 20px;
+            background-color: #e0e0e0;
+            box-shadow: inset 5px 5px 15px #bebebe, inset -5px -5px 15px #ffffff;
+            font-size: 16px;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .toggle-password-btn {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            background-color: transparent;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .action-btn, .toggle-btn {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 15px;
+            border: none;
+            border-radius: 20px;
+            width: 100%;
+            margin: 20px 0;
+            cursor: pointer;
+            box-shadow: 5px 5px 15px #bebebe, -5px -5px 15px #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+
+        .action-btn:hover, .toggle-btn:hover {
+            background-color: #dcdcdc;
+        }
+
+        .form-title {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .toggle-container {
+            margin-top: 10px;
+        }
+
+        .toggle-btn {
+            font-size: 14px;
+            background-color: transparent;
+            color: #666;
+            padding: 5px;
+            margin-top: 10px;
+            width: auto;
+            box-shadow: none;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .register-field {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="form-title">로그인</h2>
+        <input type="text" id="username" class="input-field" placeholder="아이디" required>
+        
+        <!-- 비밀번호 입력 필드와 비밀번호 보이기/숨기기 버튼 -->
+        <div class="password-container">
+            <input type="password" id="password" class="input-field" placeholder="비밀번호" required>
+            <button class="toggle-password-btn" onclick="togglePasswordVisibility()">보이기</button>
+        </div>
+        
+        <div id="register-fields" class="register-field">
+            <input type="email" id="email" class="input-field" placeholder="이메일" required>
+            <input type="password" id="confirm-password" class="input-field" placeholder="비밀번호 확인" required>
+        </div>
+
+        <button class="action-btn" id="action-btn">로그인</button>
+
+        <div class="toggle-container">
+            <button class="toggle-btn" onclick="toggleForm()">회원가입으로 전환</button>
+        </div>
+    </div>
+
+    <script>
+        let isLogin = true;
+        let passwordVisible = false;
+
+        function toggleForm() {
+            const formTitle = document.querySelector('.form-title');
+            const registerFields = document.getElementById('register-fields');
+            const actionBtn = document.getElementById('action-btn');
+            const toggleBtn = document.querySelector('.toggle-btn');
+
+            if (isLogin) {
+                formTitle.innerText = '회원가입';
+                registerFields.style.display = 'block';
+                actionBtn.innerText = '회원가입';
+                toggleBtn.innerText = '로그인으로 전환';
+            } else {
+                formTitle.innerText = '로그인';
+                registerFields.style.display = 'none';
+                actionBtn.innerText = '로그인';
+                toggleBtn.innerText = '회원가입으로 전환';
+            }
+
+            isLogin = !isLogin;
+        }
+
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            const toggleBtn = document.querySelector('.toggle-password-btn');
+
+            if (passwordVisible) {
+                passwordField.type = 'password';
+                toggleBtn.innerText = '보이기';
+            } else {
+                passwordField.type = 'text';
+                toggleBtn.innerText = '숨기기';
+            }
+
+            passwordVisible = !passwordVisible;
+        }
+    </script>
+</body>
+</html>
