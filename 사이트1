@@ -145,7 +145,6 @@
             opacity: 1;
         }
 
-        /* Content styles for each page */
         .content-wrapper {
             display: grid;
             gap: 30px;
@@ -229,7 +228,7 @@
             <div class="logo">Community</div>
             <div class="user-profile">
                 <div class="profile-image">KS</div>
-                <span>김사용님</span>
+                <span id="username-display">김사용님</span>
             </div>
         </div>
     </nav>
@@ -243,7 +242,6 @@
     </aside>
 
     <main>
-        <!-- 홈 페이지 -->
         <div class="page active" id="home">
             <div class="content-wrapper">
                 <div class="stats-container">
@@ -274,22 +272,59 @@
                         </div>
                         <div class="post-actions">
                             <button class="action-button">좋아요 15</button>
-                            <button class="action-button">댓글 5</button>
-                            <button class="action-button">공유</button>
+                            <button class="action-button">댓글 3</button>
+                        </div>
+                    </div>
+                    <div class="post">
+                        <div class="post-header">
+                            <span>작성자: 김영희</span>
+                            <span>5시간 전</span>
+                        </div>
+                        <div class="post-content">
+                            이번 주에 다녀온 여행 사진을 공유합니다. 정말 아름다웠던 순간들을 담아봤어요!
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-button">좋아요 40</button>
+                            <button class="action-button">댓글 10</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 나머지 페이지들은 숨겨져 있음 -->
-        <div class="page" id="activity">나의 활동 페이지</div>
-        <div class="page" id="following">팔로잉 페이지</div>
-        <div class="page" id="bookmarks">북마크 페이지</div>
-        <div class="page" id="settings">설정 페이지</div>
+        <div class="page" id="activity">
+            <h2>나의 활동</h2>
+            <p>여기에 나의 활동 내용이 표시됩니다.</p>
+        </div>
+
+        <div class="page" id="following">
+            <h2>팔로잉</h2>
+            <p>여기에 팔로잉한 사람들의 목록이 표시됩니다.</p>
+        </div>
+
+        <div class="page" id="bookmarks">
+            <h2>북마크</h2>
+            <p>여기에 북마크한 게시물들이 표시됩니다.</p>
+        </div>
+
+        <div class="page" id="settings">
+            <h2>설정</h2>
+            <p>여기에 설정 옵션들이 표시됩니다.</p>
+        </div>
     </main>
 
     <script>
+        // 로컬 스토리지에서 아이디 값을 가져와서 표시
+        document.addEventListener('DOMContentLoaded', () => {
+            const usernameDisplay = document.getElementById('username-display');
+            const storedUsername = localStorage.getItem('username');
+
+            if (storedUsername) {
+                usernameDisplay.textContent = `${storedUsername}님`;
+            }
+        });
+
+        // 기존 JavaScript 코드
         const menuToggle = document.querySelector('.menu-toggle');
         const sidebar = document.querySelector('.sidebar');
         const main = document.querySelector('main');
@@ -302,15 +337,13 @@
             main.classList.toggle('shifted');
         });
 
-        menuItems.forEach(item => {
+        menuItems.forEach((item) => {
             item.addEventListener('click', () => {
-                // 활성 메뉴 아이템 변경
-                menuItems.forEach(i => i.classList.remove('active'));
+                menuItems.forEach((i) => i.classList.remove('active'));
                 item.classList.add('active');
 
-                // 페이지 전환
                 const pageId = item.getAttribute('data-page');
-                pages.forEach(page => {
+                pages.forEach((page) => {
                     page.classList.remove('active');
                     if (page.id === pageId) {
                         page.classList.add('active');
