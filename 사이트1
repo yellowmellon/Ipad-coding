@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대시보드 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #e0e5ec;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Apple SD Gothic Neo', sans-serif;
+        }
+
+        nav {
+            padding: 20px;
+            background: #e0e5ec;
+            box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e5ec;
+            box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
+        }
+
+        .menu-toggle.active {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d4263;
+            margin-left: 60px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e5ec;
+            box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2d4263;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #e0e5ec;
+            padding: 100px 20px 20px;
+            box-shadow: 5px 0 10px #a3b1c6;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .menu-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            color: #2d4263;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover {
+            box-shadow: inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff;
+        }
+
+        .menu-item.active {
+            box-shadow: inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            transition: all 0.3s ease;
+        }
+
+        main.shifted {
+            margin-left: 270px;
+        }
+
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Content styles for each page */
+        .content-wrapper {
+            display: grid;
+            gap: 30px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: #e0e5ec;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d4263;
+            margin: 10px 0;
+        }
+
+        .feed-container {
+            background: #e0e5ec;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+        }
+
+        .post {
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            background: #e0e5ec;
+            box-shadow: inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .action-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            background: #e0e5ec;
+            box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
+            color: #2d4263;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            box-shadow: inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            main.shifted {
+                margin-left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-toggle">☰</div>
+    
+    <nav>
+        <div class="nav-content">
+            <div class="logo">Community</div>
+            <div class="user-profile">
+                <div class="profile-image">KS</div>
+                <span>김사용님</span>
+            </div>
+        </div>
+    </nav>
+
+    <aside class="sidebar">
+        <div class="menu-item active" data-page="home">홈</div>
+        <div class="menu-item" data-page="activity">나의 활동</div>
+        <div class="menu-item" data-page="following">팔로잉</div>
+        <div class="menu-item" data-page="bookmarks">북마크</div>
+        <div class="menu-item" data-page="settings">설정</div>
+    </aside>
+
+    <main>
+        <!-- 홈 페이지 -->
+        <div class="page active" id="home">
+            <div class="content-wrapper">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div>오늘 방문자</div>
+                        <div class="stat-number">127</div>
+                    </div>
+                    <div class="stat-card">
+                        <div>새 글</div>
+                        <div class="stat-number">23</div>
+                    </div>
+                    <div class="stat-card">
+                        <div>팔로워</div>
+                        <div class="stat-number">1.2k</div>
+                    </div>
+                </div>
+
+                <div class="feed-container">
+                    <h2>최근 게시물</h2>
+                    <div class="post">
+                        <div class="post-header">
+                            <span>작성자: 홍길동</span>
+                            <span>2시간 전</span>
+                        </div>
+                        <div class="post-content">
+                            오늘 진행된 프로젝트 미팅에서 새로운 아이디어가 나왔습니다.
+                            팀원들과 함께 brainstorming한 내용을 공유드립니다...
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-button">좋아요 15</button>
+                            <button class="action-button">댓글 5</button>
+                            <button class="action-button">공유</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 나머지 페이지들은 숨겨져 있음 -->
+        <div class="page" id="activity">나의 활동 페이지</div>
+        <div class="page" id="following">팔로잉 페이지</div>
+        <div class="page" id="bookmarks">북마크 페이지</div>
+        <div class="page" id="settings">설정 페이지</div>
+    </main>
+
+    <script>
+        const menuToggle = document.querySelector('.menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const main = document.querySelector('main');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const pages = document.querySelectorAll('.page');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            sidebar.classList.toggle('active');
+            main.classList.toggle('shifted');
+        });
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // 활성 메뉴 아이템 변경
+                menuItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                // 페이지 전환
+                const pageId = item.getAttribute('data-page');
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                    if (page.id === pageId) {
+                        page.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
